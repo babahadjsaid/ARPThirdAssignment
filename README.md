@@ -33,7 +33,7 @@ Process A has been modified to include additional functionality in the form of t
 - In server mode, Process A actively listens for incoming commands from a client, displays the updated information on the screen and forwards it to Process B. In this mode, the screen is read-only and the user cannot interact with it, they can only exit this mode by entering 'q' and return to the main menu.
 - In client mode, Process A listens to user inputs, updates the screen to provide real-time feedback, and sends the entered commands to the server. The user can exit this mode by entering 'q' and return to the main menu.<br/> 
 The entire project can be quit by pressing 'ctrl+c'.<br/> 
-Overall, the program has been modified to include additional functionality in the form of inter-process communication through messaging in both server and client mode, in addition to the normal mode functionality from the previous assignment.<br/> 
+Overall, the program has been modified to include additional functionality in the form of inter-process communication through messaging in both server and client mode, in addition to the normal mode functionality from the previous assignment.<br/><br/> 
 ![plot](./images/ProcessA.png)
 ##### Process B:
 This window displays the position and the history of the circle, the history is a sliding window of the past 1000 positions the circle had gone through.
