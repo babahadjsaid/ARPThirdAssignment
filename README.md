@@ -1,7 +1,7 @@
 # ARP Second Assignment
 Done By 
 - Baba HADJ SAID ID: 5413915
-- Abdelghani Bakour ID: 5189438
+- Abdelghani BAKOUR ID: 5189438
 ### User Manual:
 This repository contains our solution to **ARP Third Assignment**, and the following is a user manual.
 #### Requirements:
