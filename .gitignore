@@ -3,5 +3,4 @@ bin/*
 Logs/*
 src/test.cpp
 .vscode/*
-ProcessA.png
 src/interfacewithServer.py
