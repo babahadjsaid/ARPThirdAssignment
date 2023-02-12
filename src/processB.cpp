@@ -98,7 +98,10 @@ int main(int argc, char const *argv[])
     return 0;
 }
 
-
+/**
+ * @brief Get the Origin of the circle, from the bitmap.
+ * 
+ */
 void GetOrigin(){
     int tmp = 0,count = 0;
     for (int j = 0; j < HEIGHT; j++)
@@ -130,6 +133,11 @@ void GetOrigin(){
     }
 }
 
+/**
+ * @brief This function creats the bitmap from the 2d array representation in the shared memory. 
+ * so it is a mapping from a 2d representation to a bitmap.
+ * semaphores is used to sync the access to the shared memory.
+ */
 void GetBMP(){
     sem_wait(Sem_Shm);
     int (*VideoMemory)[HEIGHT] = (int (*)[HEIGHT]) SharedMem;

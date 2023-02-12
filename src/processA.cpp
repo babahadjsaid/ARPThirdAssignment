@@ -16,6 +16,12 @@ void ExitNormal();
 void ExitServer();
 void ExitClient();
 
+
+/**
+ * @brief 
+ * A signal Handler when we press ctrl+c, to safely exit the current running mode, and deallocate the
+ * taken resources.
+ */
 void signaleHandler(int sig){
     switch (modality) {
         case Normal:
@@ -42,8 +48,14 @@ void signaleHandler(int sig){
 }
 
 
-
-
+/**
+ * @brief 
+ * A function to draw a circle in the bit map, starting from the cordinates of the origin, the 
+ * Raduis of the circle is configurable, and can be modified from the macro RADUIS.
+ * 
+ * @param px the x component of the origin of the circle.
+ * @param py the x component of the origin of the circle.
+ */
 void DrawCircle(int px,int py){
     // this function will draw a circle in the bit map
     for(int y = -RADUIS; y <= RADUIS; y++) {
@@ -55,7 +67,11 @@ void DrawCircle(int px,int py){
     }
 }
 
-
+/**
+ * @brief This function edites the 2d array representation of the bit map in the shared memory. 
+ * so it is a mapping from a bitmap to the 2d representation.
+ * semaphores is used to sync the access to the shared memory.
+ */
 void SendBMP(){
     
     sem_wait(Sem_Shm);
@@ -78,7 +94,10 @@ void SendBMP(){
     sem_post(Sem_Shm);
 }
 
-
+/**
+ * @brief This function is used to clear the bitmap.
+ * 
+ */
 void ResetBMP(){
     //to clear the bitmap
     for (int j = 0; j < HEIGHT; j++)
@@ -405,13 +424,12 @@ int main(int argc, char *argv[])
 
     while (true){
         // get execution modality from user
-        cout << "Enter execution modality (0 for normal, 1 for server, 2 for client): ";
+        cout << "Enter execution modality (0 for normal, 1 for server, 2 for client).\nctrl+c to exit. \nyour choice: ";
         cin >> modality;
 
         // run the program based on the selected modality
         switch (modality) {
             case Normal:
-                PrintLog("%d\n",modality);
                 runNormal();
                 break;
             case Server:
