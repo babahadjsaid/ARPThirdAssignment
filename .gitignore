@@ -3,4 +3,3 @@ bin/*
 Logs/*
 src/test.cpp
 .vscode/*
-src/interfacewithServer.py
