@@ -30,7 +30,7 @@ you will then be prompt with Two konsole windows, which are as follows:
 ##### Process A:
 Process A has been modified to include additional functionality in the form of three different modalities:
 - In normal mode, Process A allows the user to visualize and move a circle on a 2-D view as described in the user manual of our [previous assignment](https://github.com/babahadjsaid/ARPSecondAssignment) by moving the circle and saving snapshots.
--In server mode, Process A actively listens for incoming commands from a client, displays the updated information on the screen and forwards it to Process B. In this mode, the screen is read-only and the user cannot interact with it, they can only exit this mode by entering 'q' and return to the main menu.
+- In server mode, Process A actively listens for incoming commands from a client, displays the updated information on the screen and forwards it to Process B. In this mode, the screen is read-only and the user cannot interact with it, they can only exit this mode by entering 'q' and return to the main menu.
 - In client mode, Process A listens to user inputs, updates the screen to provide real-time feedback, and sends the entered commands to the server. The user can exit this mode by entering 'q' and return to the main menu.<br/> 
 The entire project can be quit by pressing 'ctrl+c'.<br/> 
 Overall, the program has been modified to include additional functionality in the form of inter-process communication through messaging in both server and client mode, in addition to the normal mode functionality from the previous assignment.<br/> 
