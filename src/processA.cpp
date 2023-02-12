@@ -92,6 +92,12 @@ void ResetBMP(){
     
 }
 
+
+/**
+ * @brief 
+ * This is a function that runs when in Normal mode, Process A of preivious assignment.
+ * 
+ */
 int runNormal() {
    // Utility variable to avoid trigger resize event on launch
     int first_resize = TRUE;
@@ -100,7 +106,7 @@ int runNormal() {
     init_console_ui(); 
 
     
-
+    PrintLog("Select Normal Mode..\n");
     while (TRUE)
     {
         // Get input in non-blocking mode
@@ -140,31 +146,38 @@ int runNormal() {
 
         if (cmd == 'q')
         {
-            ExitNormal();
-            return 0;
+            goto exit;
         }
         usleep(PERIODE);
     }
-    ExitNormal();
+    exit:
+        ExitNormal();
     return 0;
 }
 
 
-
+/**
+ * @brief 
+ * This is a function that runs when in Server mode, creates a socket that listens on port 12345 
+ * for the client to send commands and then executes them.
+*/
 int runServer() {
     int newsockfd, portno;
     socklen_t clilen;
-    char buffer[256];
+    int buff;
     struct sockaddr_in serv_addr, cli_addr;
     int n;
+    int first_resize = TRUE;
 
+    // Initialize UI
+    init_console_ui(); 
     // create a socket
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd < 0) {
         printf("ERROR opening socket\n");
         return -1;
     }
-
+    PrintLog("Select Server Mode..\n");
     // clear address structure
     bzero((char *) &serv_addr, sizeof(serv_addr));
 
@@ -194,43 +207,66 @@ int runServer() {
     }
 
     while(true) {
+        // Get input in non-blocking mode, this is done in case user resizes the window
+        int cmd = getch();
+
+        // If user resizes screen, re-draw UI...
+        if(cmd == KEY_RESIZE) {
+            if(first_resize) {
+                first_resize = FALSE;
+            }
+            else {
+                reset_console_ui();
+            }
+        }
         // clear the buffer
-        bzero(buffer,256);
+        buff = 0;
         
         // read data from client
-        n = read(newsockfd,buffer,255);
+        n = read(newsockfd,&buff,sizeof(int));
         if (n < 0) {
-            PrintLog("ERROR reading from socket\n");
-            break;
+            goto Continue;
         }
-        if (buffer[0] =='q')
+        // if the client sends a q means that they want to quit
+        if (buff =='q')
         {
             break;
         }
-        
-        // process the received data as per Assignment 2
-        printf("Received: %s\n",buffer);
-
-        // send a reply to the client
-        n = write(newsockfd,"I got your message",18);
-        if (n < 0) {
-            PrintLog("ERROR writing to socket\n");
-            break;
+        // else update the window accordingly
+        else if(buff == KEY_LEFT || buff == KEY_RIGHT || buff == KEY_UP || buff == KEY_DOWN) {
+            // If input is an arrow key
+            ResetBMP();
+            move_circle(buff);
+            draw_circle();
+            DrawCircle(circle.x*20,circle.y*20);
+            SendBMP();
+            
         }
+        Continue:
+        usleep(PERIODE);
     }
     ExitServer();
     return 0;
 }
 
+/**
+ * @brief 
+ * This is a function that runs when in Client mode, listens to the key presses, 
+ * displays the ball, and sends the commands to the server.
 
+*/
 int runClient(){
     int newsockfd, portno;
     socklen_t clilen;
-    char buffer[256];
+    int buff;
     char addr[20];
     struct hostent *server;
     struct sockaddr_in serv_addr, cli_addr;
     int n;
+    int first_resize = TRUE;
+
+    
+    PrintLog("Select Client Mode..\n");
    // create a socket
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd < 0) {
@@ -261,53 +297,74 @@ int runClient(){
         printf("ERROR connecting\n");
         return 0;
     }
+    // Initialize UI
+    init_console_ui(); 
 
     while(true) {
         // clear the buffer
-        bzero(buffer,256);
+        buff = 0;
         
-        // get message from user
-        printf("Enter message: ");
-        cin >> buffer;
-        if(buffer[0]== NULL){
-            printf("you have to write somthing !!\n");
-            continue;
-        }
+        buff = getch();
         
+        if(buff == KEY_RESIZE) {
+                    if(first_resize) {
+                        first_resize = FALSE;
+                    }
+                    else {
+                        reset_console_ui();
+                    }
+                }
+
         // send message to server
-        int n = write(sockfd, buffer, strlen(buffer));
+        int n = write(sockfd, &buff, sizeof(int));
         if (n < 0) {
-            printf("ERROR writing to socket\n");
+            PrintLog("ERROR writing to socket\n");
             break;
         }
-        if(buffer[0]=='q'){
+        else if(buff == KEY_LEFT || buff == KEY_RIGHT || buff == KEY_UP || buff == KEY_DOWN) {
+            // If input is an arrow key
+            move_circle(buff);
+            draw_circle();
+            
+        }
+        if(buff=='q'){
             break;
         }
-        // receive reply from server
-        bzero(buffer,256);
-        n = read(sockfd, buffer, 255);
-        if (n < 0) {
-            printf("ERROR reading from socket\n");
-            break;
-        }
-        
-        // process the received data as per Assignment 2
-        printf("Reply: %s \n", buffer);
+        usleep(PERIODE);  
     }
     ExitClient();
+    return 0;
 }
 
+/**
+ * @brief 
+ * a function to exit Normal mode.
+ */
 void ExitNormal(){
     reset_console_ui();
     endwin();
+    PrintLog("Exiting Normal Mode..\n");
 }
 
+/**
+ * @brief 
+ * a function to exit Server mode.
+ */
 void ExitServer(){
     close(sockfd);
+    reset_console_ui();
+    endwin();
+    PrintLog("Exiting Server Mode..\n");
 }
+/**
+ * @brief 
+ * a function to exit Client mode.
+ */
 void ExitClient(){
-
     close(sockfd);
+    reset_console_ui();
+    endwin();
+    PrintLog("Exiting Client Mode..\n");
 }
 
 
@@ -370,3 +427,5 @@ int main(int argc, char *argv[])
     
     return 0;
 }
+
+
