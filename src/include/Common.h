@@ -97,7 +97,7 @@ int status;
 
 char* ProcessNAme = ProcessAF;
 #define PERIODE 5000
-
+#define MESSAGE_SIZE 16 // one integer is of size 1 Byte so the char represenation can take up to 2**4=16
 enum ExecutionModality {
     Normal,
     Server,

@@ -187,7 +187,7 @@ int runServer() {
     struct sockaddr_in serv_addr, cli_addr;
     int n;
     int first_resize = TRUE;
-
+    char message[MESSAGE_SIZE];
     // Initialize UI
     init_console_ui(); 
     // create a socket
@@ -242,7 +242,9 @@ int runServer() {
         buff = 0;
         
         // read data from client
-        n = read(newsockfd,&buff,sizeof(int));
+        n = read(newsockfd,message,sizeof(message));
+        buff = atoi(message);
+        PrintLog("%s,%d\n",message,buff);
         if (n < 0) {
             goto Continue;
         }
@@ -282,6 +284,7 @@ int runClient(){
     struct hostent *server;
     struct sockaddr_in serv_addr, cli_addr;
     int n;
+    char message[MESSAGE_SIZE];
     int first_resize = TRUE;
 
     
@@ -335,7 +338,8 @@ int runClient(){
                 }
 
         // send message to server
-        int n = write(sockfd, &buff, sizeof(int));
+        snprintf(message,sizeof(message),"%d",buff);
+        int n = write(sockfd, message,sizeof(message));
         if (n < 0) {
             PrintLog("ERROR writing to socket\n");
             break;
