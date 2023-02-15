@@ -262,6 +262,11 @@ int runServer() {
             DrawCircle(circle.x*20,circle.y*20);
             SendBMP();
             
+        }else if(buff==50000){
+            char filename[20];
+            sprintf(filename,"%s.png",ProcessNAme);
+            // save snapshot
+            bmp_save(bmp, filename);
         }
         Continue:
         usleep(PERIODE);
@@ -329,12 +334,16 @@ int runClient(){
         buff = getch();
         
         if(buff == KEY_RESIZE) {
-                    if(first_resize) {
-                        first_resize = FALSE;
-                    }
-                    else {
-                        reset_console_ui();
-                    }
+            if(first_resize) {
+                first_resize = FALSE;
+            }
+            else {
+                reset_console_ui();
+            }
+            }else if(buff == KEY_MOUSE) {
+                if(check_button_pressed(print_btn, &event)) {
+                buff = 50000;
+                }
                 }
 
         // send message to server
